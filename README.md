@@ -35,9 +35,13 @@ let g:chtsh_include_comments = 1
 " (The result is initial placed in a floating buffer)
 let g:chtsh_result_under_cursor = 0
 
-" Search for query
+" Search for query and display result in new buffer
 nnoremap <leader>ch :call CheatSheet()<CR>
+
+" Search for query and paste the result in current buffer
+nnoremap <leader>cp :call CheatPaste()<CR>
 ```
 
 Calling CheatSheet() function will ask user for search query ("Cheat Sheet > ").
-After entering the query, the result will be placed in a floating buffer.
+After entering the query, the result will be placed in a floating buffer or
+paste to the current working buffer.
