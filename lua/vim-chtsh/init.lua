@@ -1,6 +1,14 @@
 local baseUrl = "https://cht.sh"
 local filetype = vim.bo.filetype
 
+local vimcmd
+
+if vim.api ~= nil then
+    vimcmd = vim.api.nvim_command
+else
+    vimcmd = vim.command
+end
+
 local function getSearchString()
     local search = vim.fn.input("Cheat Sheet > ")
     search = search:gsub("% ", "+")
@@ -22,6 +30,8 @@ local function createFloatingWindow()
         row = offSet / 2,
         style="minimal"
     })
+
+    vimcmd("augroup LeaveWindow | autocmd BufLeave * :q! | autocmd! LeaveWindow | augroup END")
 end
 
 local function displayResultInWindow(command)
@@ -31,16 +41,16 @@ local function displayResultInWindow(command)
     result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
 
     if result == '' or result == nil then
-        vim.api.nvim_exec("r !echo \" No Result Found \"", true)
+        vimcmd("r !echo \" No Result Found \"")
     else
-        vim.api.nvim_command(string.format("set filetype=%s", filetype))
+        vimcmd(string.format("set filetype=%s", filetype))
     end
 
-    vim.api.nvim_command("set wrap | 1 | 1,1d")
+    vimcmd("set wrap | 1 | 1,1d")
 end
 
 local function writeResultUnderCursor(command)
-    vim.api.nvim_exec(command, true)
+    vimcmd(command)
 end
 
 local function search()
