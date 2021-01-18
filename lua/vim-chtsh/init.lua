@@ -39,6 +39,15 @@ local function createFloatingWindow()
 
     local width = math.floor(stats.width * window_settings["width"][false])
     local height = math.floor(stats.height * window_settings["height"][false])
+
+    if width == 0 then
+        width = math.floor(stats.width * 0.7)
+    end
+
+    if height == 0 then
+        height = math.floor(stats.height * 0.7)
+    end
+
     local col = math.floor((stats.width - width) / 2)
     local row = math.floor((stats.height - height) / 2)
 
