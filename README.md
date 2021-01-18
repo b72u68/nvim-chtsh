@@ -8,7 +8,7 @@ A simple NeoVim plugin to browse [cheat.sh](https://cheat.sh).
 
 This is a personal, light-weight plugin so there are not many features.
 
-Checkout the official ![cheat.sh-vim](https://github.com/dbeniamine/cheat.sh-vim)
+Checkout the official [cheat.sh-vim](https://github.com/dbeniamine/cheat.sh-vim)
 plugin for more interesting useful tools.
 
 ## Installation
