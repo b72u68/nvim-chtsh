@@ -14,4 +14,6 @@ endfun
 
 augroup CheatSheet
     autocmd!
+    nnoremap <leader>ch :call CheatSheet()<CR>
+    nnoremap <leader>cp :call CheatPaste()<CR>
 augroup END
