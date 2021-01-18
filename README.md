@@ -35,6 +35,9 @@ let g:chtsh_include_comments = 1
 " (The result is initial placed in a floating buffer)
 let g:chtsh_result_under_cursor = 0
 
+" Config result window size (value in range 0 and 1)
+let g:chtsh_window_settings = { "width": 0.7, "height": 0.7 }
+
 " Search for query and display result in new buffer
 nnoremap <leader>ch :call CheatSheet()<CR>
 
