@@ -40,5 +40,4 @@ nnoremap <leader>ch :call CheatSheet()<CR>
 ```
 
 Calling CheatSheet() function will ask user for search query ("Cheat Sheet > ").
-The plugin will automatically take the filetype as the language query using vim
-filetype. The search result will be placed in a floating buffer.
+After entering the query, the result will be placed in a floating buffer.
