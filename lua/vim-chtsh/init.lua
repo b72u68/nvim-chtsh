@@ -44,21 +44,24 @@ local function writeResultUnderCursor(command)
 end
 
 local function search()
-    local searchQuery = getSearchString()
-    local url = string.format("%s/%s/%s", baseUrl, filetype, searchQuery)
+    local searchQuery = (getSearchString()):gsub("%s+", "")
 
-    local command
+    if searchQuery ~= "" and searchQuery ~= nil then
+        local url = string.format("%s/%s/%s", baseUrl, filetype, searchQuery)
 
-    if vim.g["chtsh_include_comments"] == 0 then
-        command = string.format("r !curl --silent %s", (url .. "\\?QT"))
-    else
-        command = string.format("r !curl --silent %s", (url .. "\\?T"))
-    end
+        local command
 
-    if vim.g["chtsh_result_under_cursor"] == 0 then
-        displayResultInWindow(command)
-    else
-        writeResultUnderCursor(command)
+        if vim.g["chtsh_include_comments"] == 0 then
+            command = string.format("r !curl --silent %s", (url .. "\\?QT"))
+        else
+            command = string.format("r !curl --silent %s", (url .. "\\?T"))
+        end
+
+        if vim.g["chtsh_result_under_cursor"] == 0 then
+            displayResultInWindow(command)
+        else
+            writeResultUnderCursor(command)
+        end
     end
 end
 
