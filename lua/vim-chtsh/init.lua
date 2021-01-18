@@ -30,7 +30,7 @@ local function displayResultInWindow(command)
     local result = vim.api.nvim_exec(command, true)
     result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
 
-    if (result == '' or result == nil) then
+    if result == '' or result == nil then
         vim.api.nvim_exec("r !echo \" No Result Found \"", true)
     else
         vim.api.nvim_command(string.format("set filetype=%s", filetype))
