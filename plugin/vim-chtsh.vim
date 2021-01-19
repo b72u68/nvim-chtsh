@@ -9,7 +9,7 @@ endfun
 
 fun! CheatPaste()
     lua for k in pairs(package.loaded) do if k:match("^vim%-chtsh") then package.loaded[k] = nil end end
-    lua require("vim-chtsh").cheat(nil, 1)
+    lua require("vim-chtsh").cheat(0, 1)
 endfun
 
 augroup CheatSheet
