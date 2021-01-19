@@ -51,23 +51,29 @@ local function createFloatingWindow()
     local col = math.floor((stats.width - width) / 2)
     local row = math.floor((stats.height - height) / 2)
 
+    vimcmd(string.format('let top = " " . repeat("─", %d - 2) . " " | let mid = "│" . repeat(" ", %d - 2) . "│" | let bot = " " . repeat("─", %d - 2) . " " | let lines = [top] + repeat([mid], %d - 2) + [bot] | let s:buf = nvim_create_buf(v:false, v:true) | call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines) | call nvim_open_win(s:buf, v:true, {"relative": "editor", "row": %d, "col": %d, "width": %d, "height": %d, "style": "minimal"})',
+    width, width, width, height, row, col, width, height))
+    vimcmd("set winhighlight=Normal:NonText")
+
     local bufh = vim.api.nvim_create_buf(false, true)
     local winId = vim.api.nvim_open_win(bufh, true, {
         relative = "editor",
-        width = width,
-        height = height,
-        col = col,
-        row = row,
+        width = width - 4,
+        height = height - 2,
+        col = col + 2,
+        row = row + 1,
         style="minimal"
     })
+
     return winId
 end
 
 local function displayResultInWindow(command)
     local winId = createFloatingWindow()
 
-    if winId ~= 0 then
-        vimcmd("augroup LeaveWindow | autocmd BufLeave * :q! | autocmd! LeaveWindow | augroup END")
+    if winId ~= 0 or winID ~= nil then
+        vimcmd("augroup LeaveBuffer | autocmd BufLeave <buffer> exe 'bw '.s:buf | q! | autocmd! LeaveBuffer | augroup END")
+        vimcmd("augroup RemoveBuffer | autocmd BufWipeout <buffer> exe 'bw '.s:buf | autocmd! RemoveBuffer | augroup END")
 
         local result = vim.api.nvim_exec(command, true)
         result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
@@ -78,8 +84,7 @@ local function displayResultInWindow(command)
             vimcmd("set filetype=" .. filetype)
         end
 
-        vimcmd("set wrap | 1 | 1,1d")
-
+        vimcmd("setlocal winhighlight=Normal:LineNr | set wrap | 1 | 1,1d")
     else
         print("Error Creating Windows")
     end
