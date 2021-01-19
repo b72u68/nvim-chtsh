@@ -51,40 +51,69 @@ local function createFloatingWindow()
     local col = math.floor((stats.width - width) / 2)
     local row = math.floor((stats.height - height) / 2)
 
-    vimcmd(string.format('let top = " " . repeat("─", %d - 2) . " " | let mid = "│" . repeat(" ", %d - 2) . "│" | let bot = " " . repeat("─", %d - 2) . " " | let lines = [top] + repeat([mid], %d - 2) + [bot] | let s:buf = nvim_create_buf(v:false, v:true) | call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines) | call nvim_open_win(s:buf, v:true, {"relative": "editor", "row": %d, "col": %d, "width": %d, "height": %d, "style": "minimal"})',
-    width, width, width, height, row, col, width, height))
-    vimcmd("set winhighlight=Normal:NonText")
+    local opts = {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = col,
+        row = row,
+        style="minimal"
+    }
+
+    local top = " " .. string.rep("─", width - 2) .. " "
+    local mid = "│" .. string.rep(" ", width - 2) .. "│"
+    local bot = " " .. string.rep("─", width - 2) .. " "
+
+    local lines = {}
+    table.insert(lines, top)
+    for i=1,height-2 do
+        table.insert(lines, mid)
+    end
+    table.insert(lines, bot)
+
+    local bufBg = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(bufBg, 0, -1, true, lines)
+    local winBg = vim.api.nvim_open_win(bufBg, true, opts)
+    vimcmd("setlocal winhighlight=Normal:NonText")
 
     local bufh = vim.api.nvim_create_buf(false, true)
-    local winId = vim.api.nvim_open_win(bufh, true, {
-        relative = "editor",
-        width = width - 4,
-        height = height - 2,
-        col = col + 2,
-        row = row + 1,
-        style="minimal"
-    })
 
-    return winId
+    opts.height = height - 4
+    opts.width = 75
+    opts.col = col + math.floor(width - 75) / 2
+    opts.row = row + 2
+
+    if width - 75 <= 0 then
+        opts.width = width - 4
+        opts.col = col + 2
+    end
+
+    local winId = vim.api.nvim_open_win(bufh, true, opts)
+    vimcmd("setlocal winhighlight=Normal:LineNr")
+
+    return {bufBg, winBg, bufh, winId}
 end
 
-local function displayResultInWindow(command)
-    local winId = createFloatingWindow()
+local function displayResultInFloatingWindow(command)
+    local buffersAndWindows = createFloatingWindow()
+    local bufBg = buffersAndWindows[1]
+    local bufh = buffersAndWindows[3]
+    local winId = buffersAndWindows[4]
 
     if winId ~= 0 or winID ~= nil then
-        vimcmd("augroup LeaveBuffer | autocmd BufLeave <buffer> exe 'bw '.s:buf | q! | autocmd! LeaveBuffer | augroup END")
-        vimcmd("augroup RemoveBuffer | autocmd BufWipeout <buffer> exe 'bw '.s:buf | autocmd! RemoveBuffer | augroup END")
+        vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
+        vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
 
         local result = vim.api.nvim_exec(command, true)
         result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
 
         if result == '' or result == nil then
-            vimcmd("r !echo \" No Result Found \"")
+            vimcmd("r !echo \"No Result Found\"")
         else
-            vimcmd("set filetype=" .. filetype)
+            vimcmd("setlocal filetype=" .. filetype)
         end
 
-        vimcmd("setlocal winhighlight=Normal:LineNr | set wrap | 1 | 1,1d")
+        vimcmd("setlocal wrap | 1 | 1,1d")
     else
         print("Error Creating Windows")
     end
@@ -103,7 +132,7 @@ local function cheat(include_comments, result_under_cursor)
         end
 
         if result_under_cursor == 0 then
-            displayResultInWindow(command)
+            displayResultInFloatingWindow(command)
         else
             writeResultUnderCursor(command)
         end
