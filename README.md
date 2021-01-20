@@ -6,9 +6,7 @@ A simple Neovim plugin to browse [cheat.sh](https://cheat.sh).
 
 ## Installation
 
-**Newest Neovim version (NVIM v0.5.0) is required.**
-
-Check out Neovim here: [Neovim](https://github.com/neovim/neovim/releases)
+**Newest Neovim version (NVIM v0.5.0) is required.** Check out here: [Neovim](https://github.com/neovim/neovim/releases).
 
 Using [vim-plug](https://github.com/junegunn/vim-plug)
 
