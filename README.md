@@ -58,4 +58,4 @@ working window.
 - [x] ~~Show result in split window.~~
 - [ ] Search with language and query.
 - [ ] Create commands for easier key mapping.
-- [x] Get list of available keywords.
+- [x] ~~Get list of available keywords.~~
