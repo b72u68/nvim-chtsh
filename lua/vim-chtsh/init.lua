@@ -1,6 +1,10 @@
 local baseUrl = "https://cht.sh"
 local filetype = vim.bo.filetype
 
+if filetype == "tex" then
+    filetype = "latex"
+end
+
 local vimcmd
 
 if vim.api ~= nil then
