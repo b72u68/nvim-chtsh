@@ -9,7 +9,7 @@ else
     vimcmd = vim.command
 end
 
-local window_settings = vim.g["chtsh_window_settings"]
+local layout = vim.g["chtsh_layout"]
 
 local function getSearchStringAndCommand(include_comments)
     local searchQuery = vim.fn.input("Cheat Sheet > ")
@@ -36,9 +36,10 @@ end
 
 local function createFloatingWindow()
     local stats = vim.api.nvim_list_uis()[1]
+    local windowSettings = layout["window"]
 
-    local width = math.floor(stats.width * window_settings["width"][false])
-    local height = math.floor(stats.height * window_settings["height"][false])
+    local width = math.floor(stats.width * windowSettings["width"][false])
+    local height = math.floor(stats.height * windowSettings["height"][false])
 
     if width == 0 then
         width = math.floor(stats.width * 0.7)
@@ -60,7 +61,9 @@ local function createFloatingWindow()
         style="minimal"
     }
 
-    local top = " " .. string.rep("─", width - 2) .. " "
+    local windowName = " Cheat Sheet "
+    local topBorderNumber = math.floor(((width - 2) - string.len(windowName)) / 2)
+    local top = " " .. string.rep("─", topBorderNumber) .. windowName .. string.rep("─", width - 2 - string.len(windowName) - topBorderNumber) .. " "
     local mid = "│" .. string.rep(" ", width - 2) .. "│"
     local bot = " " .. string.rep("─", width - 2) .. " "
 
@@ -74,7 +77,7 @@ local function createFloatingWindow()
     local bufBg = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(bufBg, 0, -1, true, lines)
     local winBg = vim.api.nvim_open_win(bufBg, true, opts)
-    vimcmd("setlocal winhighlight=Normal:NonText")
+    vimcmd("setlocal winhighlight=Normal:Title")
 
     local bufh = vim.api.nvim_create_buf(false, true)
 
@@ -91,36 +94,69 @@ local function createFloatingWindow()
     local winId = vim.api.nvim_open_win(bufh, true, opts)
     vimcmd("setlocal winhighlight=Normal:LineNr")
 
-    return {bufBg, winBg, bufh, winId}
+    vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
+    vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
+
+    vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
+
+    return winId
 end
 
-local function displayResultInFloatingWindow(command)
-    local buffersAndWindows = createFloatingWindow()
-    local bufBg = buffersAndWindows[1]
-    local bufh = buffersAndWindows[3]
-    local winId = buffersAndWindows[4]
+local function createSplitWindow()
+    local split
+    local createdSplit = 1
 
-    if winId ~= 0 or winID ~= nil then
-        vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
-        vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
+    if layout["split"] == "horizontal" then
+        split = "split"
+    elseif layout["split"] == "vertical" then
+        split = "vsplit"
+    else
+        createdSplit = 0
+    end
 
-        local result = vim.api.nvim_exec(command, true)
-        result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
+    vimcmd(string.format([[
+        %s
+        noswapfile hide enew
+        setlocal buftype=nofile
+        setlocal bufhidden=hide
+        file scratch
+        setlocal filetype=%s
+    ]], split, filetype))
+
+    return createdSplit
+end
+
+local function getResult(command)
+    local result = vim.api.nvim_exec(command, true)
+    result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
+
+    return result
+end
+
+local function displayResultInBuffer(command)
+    local createdBuffer
+
+    if layout["window"] then
+        createdBuffer = createFloatingWindow()
+    else
+        createdBuffer = createSplitWindow()
+    end
+
+    if createdBuffer ~= 0 or createdBuffer ~= nil then
+        local result = getResult(command)
 
         if result == '' or result == nil then
             vimcmd("r !echo \"No Result Found\"")
-        else
-            vimcmd("setlocal filetype=" .. filetype)
         end
 
-        vimcmd("setlocal wrap | 1 | 1,1d")
+        vimcmd("1 | 1,1d")
     else
-        print("Error Creating Windows")
+        print("Error: Cannot create buffer and window")
     end
 end
 
 local function writeResultUnderCursor(command)
-    vimcmd(command)
+    local result = getResult(command)
 end
 
 local function cheat(include_comments, result_under_cursor)
@@ -132,7 +168,7 @@ local function cheat(include_comments, result_under_cursor)
         end
 
         if result_under_cursor == 0 then
-            displayResultInFloatingWindow(command)
+            displayResultInBuffer(command)
         else
             writeResultUnderCursor(command)
         end
