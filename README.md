@@ -4,13 +4,6 @@ A simple NeoVim plugin to browse [cheat.sh](https://cheat.sh).
 
 ![Vim-chtsh Demo](vim-chtsh-demo.png)
 
-## About vim-chtsh
-
-This is a personal, lightweight plugin so there are not many features.
-
-Checkout the official [cheat.sh-vim](https://github.com/dbeniamine/cheat.sh-vim)
-plugin for more useful tools.
-
 ## Installation
 
 Using [vim-plug](https://github.com/junegunn/vim-plug)
