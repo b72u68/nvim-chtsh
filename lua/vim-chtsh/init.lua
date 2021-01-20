@@ -151,7 +151,7 @@ local function displayResultInBuffer(command)
 
         vimcmd("1 | 1,1d")
     else
-        print("Error: Cannot create buffer and window")
+        print("Error: Cannot create floating window or split")
     end
 end
 
@@ -159,7 +159,7 @@ local function writeResultUnderCursor(command)
     local result = getResult(command)
 end
 
-local function cheat(include_comments, result_under_cursor)
+local function cheatSearch(include_comments, result_under_cursor)
     local command = getSearchStringAndCommand(include_comments)
 
     if command ~= nil then
@@ -176,5 +176,5 @@ local function cheat(include_comments, result_under_cursor)
 end
 
 return {
-    cheat = cheat
+    cheatSearch = cheatSearch
 }
