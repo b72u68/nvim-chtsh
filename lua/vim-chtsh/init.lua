@@ -172,8 +172,8 @@ end
 
 local function cheat_list()
     create_floating_window{
-        name = " Cheat List ",
-        width = 0.7,
+        name = string.format(" Cheat List (%s) ", filetype),
+        width = 0.4,
         height = 0.7,
     }
 
