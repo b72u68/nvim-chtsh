@@ -98,7 +98,20 @@ local function create_floating_window(window_props)
     local win_result = vim.api.nvim_open_win(buf_result, true, opts)
     vimcmd("setlocal winhighlight=Normal:TermCursorNC")
 
-    vimcmd(string.format("augroup WipeBuffer | autocmd BufLeave,WinLeave,BufWipeout <buffer> :bw %d %d | autocmd! WipeBuffer | augroup END", buf_result, buf_background))
+    vimcmd(
+        string.format(
+            "augroup WipeBuffer | autocmd BufDelete,BufWipeout <buffer> ++once ++nested :bw! %d | autocmd! WipeBuffer | augroup END",
+            buf_background
+        )
+    )
+
+    vimcmd(
+        string.format(
+            "augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> ++once ++nested :bw! %d | autocmd! LeaveBuffer | augroup END",
+            buf_result
+        )
+    )
+
     vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
 end
 
