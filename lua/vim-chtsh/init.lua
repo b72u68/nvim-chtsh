@@ -92,7 +92,7 @@ local function createFloatingWindow()
     end
 
     local winId = vim.api.nvim_open_win(bufh, true, opts)
-    vimcmd("setlocal winhighlight=Normal:LineNr")
+    vimcmd("setlocal winhighlight=Normal:TermCursorNC")
 
     vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
     vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
