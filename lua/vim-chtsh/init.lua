@@ -63,9 +63,9 @@ local function createFloatingWindow()
 
     local windowName = " Cheat Sheet "
     local topBorderNumber = math.floor(((width - 2) - string.len(windowName)) / 2)
-    local top = " " .. string.rep("─", topBorderNumber) .. windowName .. string.rep("─", width - 2 - string.len(windowName) - topBorderNumber) .. " "
+    local top = "╭" .. string.rep("─", topBorderNumber) .. windowName .. string.rep("─", width - 2 - string.len(windowName) - topBorderNumber) .. "╮"
     local mid = "│" .. string.rep(" ", width - 2) .. "│"
-    local bot = " " .. string.rep("─", width - 2) .. " "
+    local bot = "╰" .. string.rep("─", width - 2) .. "╯"
 
     local lines = {}
     table.insert(lines, top)
