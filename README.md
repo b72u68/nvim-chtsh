@@ -46,9 +46,11 @@ nnoremap <leader>ch :call CheatSheet()<CR>
 nnoremap <leader>cp :call CheatPaste()<CR>
 ```
 
-Calling CheatSheet() function will ask user for search query ("Cheat Sheet > ").
-After entering the query, the result will be placed in a floating window or
-paste to the current working window.
+Calling CheatSheet() function will ask user for search query (Example: "function",
+"class"). If you want to see other result of the same query, add "\1", "\2", etc.
+at the end of the query ("function\1", "function\2", etc.). After entering the
+query, the result will be placed in a floating window or paste to the current
+working window.
 
 ## TO-DO
 
@@ -56,4 +58,4 @@ paste to the current working window.
 - [x] ~~Show result in split window.~~
 - [ ] Search with language and query.
 - [ ] Create commands for easier key mapping.
-- [ ] Get list of available keywords.
+- [x] Get list of available keywords.
