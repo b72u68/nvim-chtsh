@@ -27,16 +27,22 @@ call dein#add('b72u68/vim-chtsh')
 
 ## Usage
 
+Default Settings for vim-chtsh:
+
 ```viml
-" Search result contains comments (initial value = 1)
+" Show comments in result (default: 1)
+" (0: remove comments in result, 1: show comments in result)
 let g:chtsh_include_comments = 1
 
-" Search result is written under the cursor in current bufer (initial value = 0)
-" (The result is initial placed in a floating buffer)
+" Search result is written under the cursor in current bufer (default: 0)
+" (0: show result in buffer, 1: write result in the working buffer)
 let g:chtsh_result_under_cursor = 0
 
-" Config result window size (value in range 0 and 1)
-let g:chtsh_window_settings = { "width": 0.7, "height": 0.7 }
+" Config result window size (value: from 0 to 1)
+" If you want result to be in the split, change the setting to
+" g:chtsh_layout = { "split": "vertical" } (display result in vertical split)
+" or g:chtsh_layout = { "split": "horizontal" } (display result in horizontal split)
+let g:chtsh_layout = { "width": 0.7, "height": 0.7 }
 
 " Search for query and display result in new buffer
 nnoremap <leader>ch :call CheatSheet()<CR>
