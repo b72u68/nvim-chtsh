@@ -1,10 +1,6 @@
 local baseUrl = "https://cht.sh"
 local filetype = vim.bo.filetype
 
-if filetype == "tex" then
-    filetype = "latex"
-end
-
 local vimcmd
 
 if vim.api ~= nil then
@@ -22,7 +18,13 @@ local function getSearchStringAndCommand(include_comments)
     local command
 
     if searchQuery ~= "" and searchQuery ~= nil then
-        local url = string.format("%s/%s/%s", baseUrl, filetype, searchQuery)
+        local url
+
+        if filetype == "tex" then
+            url = string.format("%s/latex/%s",baseUrl, searchQuery)
+        else
+            url = string.format("%s/%s/%s", baseUrl, filetype, searchQuery)
+        end
 
         if include_comments == nil then
             include_comments = vim.g["chtsh_include_comments"]
@@ -101,11 +103,7 @@ local function createFloatingWindow()
     vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
     vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
 
-    if filetype == "latex" then
-        vimcmd("setlocal wrap | setlocal filetype=tex")
-    else
-        vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
-    end
+    vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
 
     return winId
 end
