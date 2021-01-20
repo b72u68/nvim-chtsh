@@ -37,7 +37,7 @@ let g:chtsh_result_under_cursor = 0
 " If you want result to be in the split, change the setting to
 " g:chtsh_layout = { "split": "vertical" } (display result in vertical split)
 " or g:chtsh_layout = { "split": "horizontal" } (display result in horizontal split)
-let g:chtsh_layout = { "width": 0.7, "height": 0.7 }
+let g:chtsh_layout = { "window": {"width": 0.7, "height": 0.7 } }
 
 " Search for query and display result in new window
 nnoremap <leader>ch :call CheatSheet()<CR>
