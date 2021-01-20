@@ -1,10 +1,14 @@
 # vim-chtsh
 
-A simple NeoVim plugin to browse [cheat.sh](https://cheat.sh).
+A simple Neovim plugin to browse [cheat.sh](https://cheat.sh).
 
 ![Vim-chtsh Demo](vim-chtsh-demo.png)
 
 ## Installation
+
+**Newest Neovim version (NVIM v0.5.0) is required.**
+
+Check out Neovim here: [Neovim](https://github.com/neovim/neovim/releases)
 
 Using [vim-plug](https://github.com/junegunn/vim-plug)
 
