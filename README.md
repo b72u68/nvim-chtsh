@@ -57,7 +57,7 @@ paste to the current working window.
 
 ## TO-DO
 
-[x] ~~Add border lines around the result buffer.~~
-[x] ~~Show result in split window.~~
-[ ] Search with language and query.
-[ ] Create commands for easier key mapping.
+- [x] ~~Add border lines around the result buffer.~~
+- [x] ~~Show result in split window.~~
+- [ ] Search with language and query.
+- [ ] Create commands for easier key mapping.
