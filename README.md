@@ -34,8 +34,8 @@ Default Settings for vim-chtsh:
 " (0: remove comments in result, 1: show comments in result)
 let g:chtsh_include_comments = 1
 
-" Search result is written under the cursor in current bufer (default: 0)
-" (0: show result in buffer, 1: write result in the working buffer)
+" Search result is written under the cursor in current window (default: 0)
+" (0: show result in floating window, 1: write result in the working window)
 let g:chtsh_result_under_cursor = 0
 
 " Config result window size (value: from 0 to 1)
@@ -44,13 +44,20 @@ let g:chtsh_result_under_cursor = 0
 " or g:chtsh_layout = { "split": "horizontal" } (display result in horizontal split)
 let g:chtsh_layout = { "width": 0.7, "height": 0.7 }
 
-" Search for query and display result in new buffer
+" Search for query and display result in new window
 nnoremap <leader>ch :call CheatSheet()<CR>
 
-" Search for query and paste the result in current buffer
+" Search for query and paste the result in current window
 nnoremap <leader>cp :call CheatPaste()<CR>
 ```
 
 Calling CheatSheet() function will ask user for search query ("Cheat Sheet > ").
-After entering the query, the result will be placed in a floating buffer or
-paste to the current working buffer.
+After entering the query, the result will be placed in a floating window or
+paste to the current working window.
+
+## TO-DO
+
+[x] ~~Add border lines around the result buffer.~~
+[x] ~~Show result in split window.~~
+[ ] Search with language and query.
+[ ] Create commands for easier key mapping.
