@@ -101,7 +101,11 @@ local function createFloatingWindow()
     vimcmd(string.format("augroup LeaveBuffer | autocmd BufLeave,WinLeave <buffer> :bw!%d | bw!%d | autocmd! LeaveBuffer | augroup END", bufh, bufBg))
     vimcmd(string.format("augroup RemoveBuffer | autocmd BufWipeout <buffer> :bw!%d | :bw!%d | autocmd! RemoveBuffer | augroup END", bufh, bufBg))
 
-    vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
+    if filetype == "latex" then
+        vimcmd("setlocal wrap | setlocal filetype=tex")
+    else
+        vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
+    end
 
     return winId
 end
