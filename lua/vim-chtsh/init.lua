@@ -196,7 +196,7 @@ local function cheat_list()
         vimcmd(string.format("r !curl --silent %s/%s/:list", base_url, filetype))
     end
 
-    vimcmd("1")
+    vimcmd("1 | set cursorline")
     vim.api.nvim_del_current_line()
 end
 
