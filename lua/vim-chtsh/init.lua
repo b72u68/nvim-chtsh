@@ -11,7 +11,11 @@ end
 
 local function get_result(options)
     local query = get_query()
-    return cheat.get_result(query, options)
+    if query ~= "" then
+        return cheat.get_result(query, options)
+    else
+        return nil
+    end
 end
 
 local function create_floating_window(window_props)
@@ -86,15 +90,17 @@ local function cheat_list()
 
     local result = cheat.get_result(":list", options)
 
-    create_floating_window{
-        title = string.format("Cheat List (%s)", filetype),
-        width = 0.4,
-        height = 0.7,
-        highlight_group = "ModeMsg"
-    }
+    if result ~= nil or table.getn(result) ~= 0 then
+        create_floating_window{
+            title = string.format("Cheat List (%s)", filetype),
+            width = 0.4,
+            height = 0.7,
+            highlight_group = "ModeMsg"
+        }
 
-    vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
-    vim.cmd("set cursorline")
+        vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
+        vim.cmd("set cursorline")
+    end
 end
 
 return {
