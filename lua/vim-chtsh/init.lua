@@ -1,37 +1,17 @@
 local float_win = require("vim-chtsh.window.float_win")
+local cheat = require("vim-chtsh.cheat")
 
-local base_url = "https://cht.sh"
 local filetype = vim.bo.filetype
-
 local layout = vim.g["chtsh_layout"]
 
-local function get_query_and_command(include_comments)
-    local search_query = vim.fn.input("Cheat Sheet > ")
-    search_query = (search_query:gsub("% ", "+")):gsub("%s+", "")
+local function get_query()
+    local query = vim.fn.input("Cheat Sheet > ")
+    return query
+end
 
-    local command
-
-    if search_query ~= "" and search_query ~= nil then
-        local url
-
-        if filetype == "tex" then
-            url = string.format("%s/latex/%s", base_url, search_query)
-        else
-            url = string.format("%s/%s/%s", base_url, filetype, search_query)
-        end
-
-        if include_comments == nil then
-            include_comments = vim.g["chtsh_include_comments"]
-        end
-
-        if include_comments == 0 then
-            command = "r !curl --silent " .. (url .. "\\?QT")
-        else
-            command = "r !curl --silent " .. (url .. "\\?T")
-        end
-    end
-
-    return command
+local function get_result(options)
+    local query = get_query()
+    return cheat.get_result(query, options)
 end
 
 local function create_floating_window(window_props)
@@ -43,7 +23,6 @@ local function create_floating_window(window_props)
     }
 
     float_win.create_float_win(options)
-
     vim.cmd("setlocal wrap | setlocal filetype=" .. filetype)
 end
 
@@ -66,49 +45,47 @@ local function create_split_window()
     ]], split, filetype))
 end
 
-local function get_result(command)
-    local result = vim.api.nvim_exec(command, true)
-    result = (result:gsub("^:!curl [^\n]*\n", "")):gsub("%s+", "")
-
-    return result
-end
-
-local function display_result_in_created_buffer(command)
-    if layout["window"] then
-        local window_settings = layout["window"]
-        create_floating_window{
-            title = "Cheat Sheet",
-            width = window_settings["width"][false],
-            height = window_settings["height"][false],
-            highlight_group = "Title"
-        }
-    else
-        create_split_window()
-    end
-
-    local result = get_result(command)
-
-    if result == "" or result == nil then
-        vim.cmd("r !echo \"No Result Found\"")
-    end
-
-    vim.cmd("1")
-    vim.api.nvim_del_current_line()
-end
-
-local function cheat_search(props)
-    local command = get_query_and_command(props.include_comments)
-
-    if command ~= nil then
-        if props.result_in_current_buffer == nil then
-            props.result_in_current_buffer = vim.g["chtsh_result_in_current_buffer"]
+local function display_result(result)
+    if result ~= nil then
+        if layout["window"] then
+            local window_settings = layout["window"]
+            create_floating_window{
+                title = "Cheat Sheet",
+                width = window_settings["width"][false],
+                height = window_settings["height"][false],
+                highlight_group = "Title"
+            }
+        else
+            create_split_window()
         end
 
-        display_result_in_created_buffer(command)
+        if table.getn(result) == 0 then
+            vim.cmd("r !echo \"No Result Found\"")
+        else
+            vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
+        end
     end
+end
+
+local function cheat_sheet()
+    local options = {
+        include_comments = vim.g["chtsh_include_comments"],
+        query_include_language = 0
+    }
+
+    local result = get_result(options)
+
+    display_result(result)
 end
 
 local function cheat_list()
+    local options = {
+        include_comments = 0,
+        query_include_language = 0
+    }
+
+    local result = cheat.get_result(":list", options)
+
     create_floating_window{
         title = string.format("Cheat List (%s)", filetype),
         width = 0.4,
@@ -116,17 +93,11 @@ local function cheat_list()
         highlight_group = "ModeMsg"
     }
 
-    if filetype == "tex" then
-        vim.cmd(string.format("r !curl --silent %s/latex/:list", base_url))
-    else
-        vim.cmd(string.format("r !curl --silent %s/%s/:list", base_url, filetype))
-    end
-
-    vim.cmd("1 | set cursorline")
-    vim.api.nvim_del_current_line()
+    vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
+    vim.cmd("set cursorline")
 end
 
 return {
-    cheat_search = cheat_search,
+    cheat_sheet = cheat_sheet,
     cheat_list = cheat_list
 }
