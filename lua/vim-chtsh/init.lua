@@ -1,13 +1,7 @@
+local float_win = require("vim-chtsh.window.float_win")
+
 local base_url = "https://cht.sh"
 local filetype = vim.bo.filetype
-
-local vimcmd
-
-if vim.api ~= nil then
-    vimcmd = vim.api.nvim_command
-else
-    vimcmd = vim.command
-end
 
 local layout = vim.g["chtsh_layout"]
 
@@ -41,78 +35,16 @@ local function get_query_and_command(include_comments)
 end
 
 local function create_floating_window(window_props)
-    local stats = vim.api.nvim_list_uis()[1]
-
-    local width = math.floor(stats.width * window_props.width)
-    local height = math.floor(stats.height * window_props.height)
-
-    if width == 0 then
-        width = math.floor(stats.width * 0.7)
-    end
-
-    if height == 0 then
-        height = math.floor(stats.height * 0.7)
-    end
-
-    local col = math.floor((stats.width - width) / 2)
-    local row = math.floor((stats.height - height) / 2)
-
-    local opts = {
-        relative = "editor",
-        width = width,
-        height = height,
-        col = col,
-        row = row,
-        style="minimal"
+    local options = {
+        title = window_props.title,
+        height_percentage = window_props.height,
+        width_percentage = window_props.width,
+        highlight_group = "TermCursorNC"
     }
 
-    local top_half_line = math.floor(((width - 2) - string.len(window_props.name)) / 2)
-    local top = "╭" .. string.rep("─", top_half_line) .. window_props.name .. string.rep("─", width - 2 - string.len(window_props.name) - top_half_line) .. "╮"
-    local mid = "│" .. string.rep(" ", width - 2) .. "│"
-    local bot = "╰" .. string.rep("─", width - 2) .. "╯"
+    float_win.create_float_win(options)
 
-    local lines = {}
-    table.insert(lines, top)
-    for i=1,height-2 do
-        table.insert(lines, mid)
-    end
-    table.insert(lines, bot)
-
-    local buf_background = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(buf_background, 0, -1, true, lines)
-    local win_background = vim.api.nvim_open_win(buf_background, true, opts)
-    vimcmd("setlocal winhighlight=Normal:Title")
-
-    local buf_result = vim.api.nvim_create_buf(false, true)
-
-    opts.height = height - 4
-    opts.width = 75
-    opts.col = col + math.floor(width - 75) / 2
-    opts.row = row + 2
-
-    if width - 75 <= 0 then
-        opts.width = width - 4
-        opts.col = col + 2
-    end
-
-    local win_result = vim.api.nvim_open_win(buf_result, true, opts)
-    vimcmd("setlocal winhighlight=Normal:TermCursorNC")
-
-    vim.cmd(string.format(
-        "autocmd BufLeave,BufDelete <buffer=%s> ++nested ++once lua require('vim-chtsh.window').close_related_win(%s, %s)",
-        buf_result,
-        win_result,
-        win_background
-    ))
-
-    vim.cmd(string.format(
-        "autocmd WinClosed,WinLeave <buffer=%s> ++nested ++once lua require('vim-chtsh.window').close_related_win(%s, %s)",
-        buf_result,
-        win_result,
-        win_background
-    ))
-
-    vimcmd("setlocal wrap | setlocal filetype=" .. filetype)
+    vim.cmd("setlocal wrap | setlocal filetype=" .. filetype)
 end
 
 local function create_split_window()
@@ -124,7 +56,7 @@ local function create_split_window()
         split = "vsplit"
     end
 
-    vimcmd(string.format([[
+    vim.cmd(string.format([[
         %s
         noswapfile hide enew
         setlocal buftype=nofile
@@ -145,7 +77,7 @@ local function display_result_in_created_buffer(command)
     if layout["window"] then
         local window_settings = layout["window"]
         create_floating_window{
-            name = " Cheat Sheet ",
+            title = "Cheat Sheet",
             width = window_settings["width"][false],
             height = window_settings["height"][false],
         }
@@ -156,15 +88,11 @@ local function display_result_in_created_buffer(command)
     local result = get_result(command)
 
     if result == "" or result == nil then
-        vimcmd("r !echo \"No Result Found\"")
+        vim.cmd("r !echo \"No Result Found\"")
     end
 
-    vimcmd("1")
+    vim.cmd("1")
     vim.api.nvim_del_current_line()
-end
-
-local function write_result_in_current_buffer(command)
-    get_result(command)
 end
 
 local function cheat_search(props)
@@ -175,28 +103,24 @@ local function cheat_search(props)
             props.result_in_current_buffer = vim.g["chtsh_result_in_current_buffer"]
         end
 
-        if props.result_in_current_buffer == 0 then
-            display_result_in_created_buffer(command)
-        else
-            write_result_in_current_buffer(command)
-        end
+        display_result_in_created_buffer(command)
     end
 end
 
 local function cheat_list()
     create_floating_window{
-        name = string.format(" Cheat List (%s) ", filetype),
+        title = string.format("Cheat List (%s)", filetype),
         width = 0.4,
         height = 0.7,
     }
 
     if filetype == "tex" then
-        vimcmd(string.format("r !curl --silent %s/latex/:list", base_url))
+        vim.cmd(string.format("r !curl --silent %s/latex/:list", base_url))
     else
-        vimcmd(string.format("r !curl --silent %s/%s/:list", base_url, filetype))
+        vim.cmd(string.format("r !curl --silent %s/%s/:list", base_url, filetype))
     end
 
-    vimcmd("1 | set cursorline")
+    vim.cmd("1 | set cursorline")
     vim.api.nvim_del_current_line()
 end
 
