@@ -154,7 +154,7 @@ function float_win.create_float_win(options)
 
     local bufnr = vim.api.nvim_create_buf(false, true)
     local win_id = vim.api.nvim_open_win(bufnr, true, win_opts)
-    vim.cmd("setlocal winhighlight=Normal:" .. options.highlight_group)
+    vim.cmd("setlocal winhighlight=Normal:TermCursorNC")
 
     vim.cmd(string.format(
         "autocmd BufLeave,BufDelete <buffer=%s> ++nested ++once lua require('vim-chtsh.window').close_related_win(%s, %s)",

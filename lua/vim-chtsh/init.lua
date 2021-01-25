@@ -39,7 +39,7 @@ local function create_floating_window(window_props)
         title = window_props.title,
         height_percentage = window_props.height,
         width_percentage = window_props.width,
-        highlight_group = "TermCursorNC"
+        highlight_group = window_props.highlight_group
     }
 
     float_win.create_float_win(options)
@@ -80,6 +80,7 @@ local function display_result_in_created_buffer(command)
             title = "Cheat Sheet",
             width = window_settings["width"][false],
             height = window_settings["height"][false],
+            highlight_group = "Title"
         }
     else
         create_split_window()
@@ -112,6 +113,7 @@ local function cheat_list()
         title = string.format("Cheat List (%s)", filetype),
         width = 0.4,
         height = 0.7,
+        highlight_group = "ModeMsg"
     }
 
     if filetype == "tex" then
