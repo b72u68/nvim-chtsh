@@ -91,7 +91,7 @@ local function cheat_sheet()
             title = "Cheat Sheet",
             width = window_settings["width"][false],
             height = window_settings["height"][false],
-            highlight_group = "Title"
+            highlight_group = "TermCursorNr"
         }
     end
 
@@ -113,7 +113,7 @@ local function cheat_search()
             title = string.format("Cheat Search (%s)", filetype),
             width = window_settings["width"][false],
             height = window_settings["height"][false],
-            highlight_group = "Title"
+            highlight_group = "TermCursorNr"
         }
     end
 
@@ -134,7 +134,7 @@ local function cheat_list()
             title = string.format("Cheat List (%s)", filetype),
             width = 0.4,
             height = 0.7,
-            highlight_group = "ModeMsg"
+            highlight_group = "LineNr"
         }
 
         display_result(result, win_opts)
