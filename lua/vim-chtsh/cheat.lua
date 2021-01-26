@@ -8,11 +8,11 @@ cheat.default_options = {
     query_include_language = 0,
 }
 
-function cheat.get_command(query, options)
+function cheat.get_url(query, options)
     local url, tag
 
     local include_comments = options.include_comments or cheat.default_options.include_comments
-    local query_include_language = options.no_comments or cheat.default_options.query_include_language
+    local query_include_language = options.include_comments or cheat.default_options.query_include_language
 
     if include_comments == 0 then
         tag = "\\?QT"
@@ -21,18 +21,11 @@ function cheat.get_command(query, options)
     end
 
     if query_include_language == 1 then
-        local language
         local first_whitespace = string.find(query, "%s")
 
         if first_whitespace ~= nil then
-            language = string.sub(query, 1, first_whitespace - 1)
-            query = (string.sub(query, first_whitespace - 1)):gsub("%s", "+")
-            url = string.format("%s/%s/%s%s",
-                base_url,
-                language,
-                query,
-                tag
-            )
+            filetype = string.sub(query, 1, first_whitespace - 1)
+            query = (string.sub(query, first_whitespace + 1)):gsub("%s", "+")
         end
     else
         query = query:gsub("%s", "+")
@@ -40,21 +33,22 @@ function cheat.get_command(query, options)
         if filetype == "tex" then
             filetype = "latex"
         end
-
-        url = string.format("%s/%s/%s%s",
-            base_url,
-            filetype,
-            query,
-            tag
-        )
     end
 
-    return url
+    url = string.format("%s/%s/%s%s",
+        base_url,
+        filetype,
+        query,
+        tag
+    )
+
+    return {
+        url = url,
+        filetype = filetype
+    }
 end
 
-function cheat.get_result(query, options)
-    local url = cheat.get_command(query, options)
-
+function cheat.get_result(url)
     local command = "!curl --silent " .. url
     local result = vim.api.nvim_exec(command, true)
 

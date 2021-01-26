@@ -12,7 +12,13 @@ end
 local function get_result(options)
     local query = get_query()
     if query ~= "" then
-        return cheat.get_result(query, options)
+        local obj = cheat.get_url(query, options)
+
+        if obj.filetype then
+            filetype = obj.filetype
+        end
+
+        return cheat.get_result(obj.url)
     else
         return nil
     end
@@ -49,15 +55,14 @@ local function create_split_window()
     ]], split, filetype))
 end
 
-local function display_result(result)
+local function display_result(result, win_opts)
     if result ~= nil then
-        if layout["window"] then
-            local window_settings = layout["window"]
+        if win_opts ~= nil then
             create_floating_window{
-                title = "Cheat Sheet",
-                width = window_settings["width"][false],
-                height = window_settings["height"][false],
-                highlight_group = "Title"
+                title = win_opts.title,
+                width = win_opts.width,
+                height = win_opts.height,
+                highlight_group = win_opts.highlight_group
             }
         else
             create_split_window()
@@ -72,38 +77,73 @@ local function display_result(result)
 end
 
 local function cheat_sheet()
-    local options = {
+    local search_options = {
         include_comments = vim.g["chtsh_include_comments"],
         query_include_language = 0
     }
 
-    local result = get_result(options)
+    local result = get_result(search_options)
+    local win_opts = nil
 
-    display_result(result)
+    if layout["window"] then
+        local window_settings = layout["window"]
+        win_opts = {
+            title = "Cheat Sheet",
+            width = window_settings["width"][false],
+            height = window_settings["height"][false],
+            highlight_group = "Title"
+        }
+    end
+
+    display_result(result, win_opts)
+end
+
+local function cheat_search()
+    local search_options = {
+        include_comments = vim.g["chtsh_include_comments"],
+        query_include_language = 1
+    }
+
+    local result = get_result(search_options)
+    local window_opts = nil
+
+    if layout["window"] then
+        local window_settings = layout["window"]
+        win_opts = {
+            title = string.format("Cheat Search (%s)", filetype),
+            width = window_settings["width"][false],
+            height = window_settings["height"][false],
+            highlight_group = "Title"
+        }
+    end
+
+    display_result(result, win_opts)
 end
 
 local function cheat_list()
-    local options = {
+    local search_options = {
         include_comments = 0,
         query_include_language = 0
     }
 
-    local result = cheat.get_result(":list", options)
+    local obj = cheat.get_url(":list", search_options)
+    local result = cheat.get_result(obj.url)
 
     if result ~= nil or table.getn(result) ~= 0 then
-        create_floating_window{
+        local win_opts = {
             title = string.format("Cheat List (%s)", filetype),
             width = 0.4,
             height = 0.7,
             highlight_group = "ModeMsg"
         }
 
-        vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
+        display_result(result, win_opts)
         vim.cmd("set cursorline")
     end
 end
 
 return {
     cheat_sheet = cheat_sheet,
+    cheat_search = cheat_search,
     cheat_list = cheat_list
 }

@@ -6,6 +6,11 @@ fun! CheatSheet()
     lua require("vim-chtsh").cheat_sheet()
 endfun
 
+fun! CheatSearch()
+    lua for k in pairs(package.loaded) do if k:match("^vim%-chtsh") then package.loaded[k] = nil end end
+    lua require("vim-chtsh").cheat_search()
+endfun
+
 fun! CheatList()
     lua for k in pairs(package.loaded) do if k:match("^vim%-chtsh") then package.loaded[k] = nil end end
     lua require("vim-chtsh").cheat_list()
@@ -14,5 +19,6 @@ endfun
 augroup CheatSheet
     autocmd!
     nnoremap <leader>ch :call CheatSheet()<CR>
+    nnoremap <leader>cs :call CheatSearch()<CR>
     nnoremap <leader>cl :call CheatList()<CR>
 augroup END
