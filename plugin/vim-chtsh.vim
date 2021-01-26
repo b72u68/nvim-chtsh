@@ -18,7 +18,8 @@ endfun
 
 augroup CheatSheet
     autocmd!
-    nnoremap <leader>ch :call CheatSheet()<CR>
-    nnoremap <leader>cs :call CheatSearch()<CR>
-    nnoremap <leader>cl :call CheatList()<CR>
 augroup END
+
+command! CheatSheet call CheatSheet()
+command! CheatSearch call CheatSearch()
+command! CheatList call CheatList()
