@@ -25,6 +25,8 @@ call dein#add('b72u68/vim-chtsh')
 Default Settings for vim-chtsh:
 
 ```viml
+" Settings
+
 " Show comments in result (default: 1)
 " (0: remove comments in result, 1: show comments in result)
 let g:chtsh_include_comments = 1
@@ -35,8 +37,17 @@ let g:chtsh_include_comments = 1
 " or g:chtsh_layout = { "split": "horizontal" } (display result in horizontal split)
 let g:chtsh_layout = { "window": {"width": 0.7, "height": 0.7 } }
 
+
+" Some available commands
+
 " Search for query and display result in new window
-nnoremap <leader>ch :call CheatSheet()<CR>
+command! CheatSheet call CheatSheet()
+
+" Search for query and display result in new window (input language)
+command! CheatSearch call CheatSearch()
+
+" Display list of available queries on cheat.sh for filetype
+command! CheatList call CheatList()
 ```
 
 Calling CheatSheet() function will ask user for search query (Example: "function",
@@ -56,5 +67,5 @@ Functions\2
 - [x] ~~Add border lines around the result buffer.~~
 - [x] ~~Show result in split window.~~
 - [x] ~~Search with language and query.~~
-- [ ] Create commands for easier key mapping.
+- [x] ~~Create commands for easier key mapping.~~
 - [x] ~~Get list of available keywords.~~
