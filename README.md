@@ -41,9 +41,11 @@ let g:chtsh_layout = { "window": {"width": 0.7, "height": 0.7 } }
 " Some available commands
 
 " Search for query and display result in new window
+" (Example: function)
 command! CheatSheet call CheatSheet()
 
 " Search for query and display result in new window (input language)
+" (Example: javascript function)
 command! CheatSearch call CheatSearch()
 
 " Display list of available queries on cheat.sh for filetype
@@ -63,6 +65,8 @@ Functions\2
 ```
 
 ## TO-DO
+
+More features coming soon (if I come up with something)
 
 - [x] ~~Add border lines around the result buffer.~~
 - [x] ~~Show result in split window.~~
