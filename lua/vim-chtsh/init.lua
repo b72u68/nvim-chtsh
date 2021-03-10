@@ -1,5 +1,10 @@
 local float_win = require("vim-chtsh.window.float_win")
 local cheat = require("vim-chtsh.cheat")
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
+local finders = require('telescope.finders')
+local pickers = require('telescope.pickers')
+local sorters = require('telescope.sorters')
 
 local filetype = vim.bo.filetype
 local layout = vim.g["chtsh_layout"]
@@ -50,7 +55,7 @@ local function create_split_window()
         noswapfile hide enew
         setlocal buftype=nofile
         setlocal bufhidden=hide
-        file scratch
+        file CheatSheet
         setlocal filetype=%s
     ]], split, filetype))
 end
@@ -73,6 +78,8 @@ local function display_result(result, win_opts)
         else
             vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
         end
+    else
+        error("No result found")
     end
 end
 
@@ -120,6 +127,48 @@ local function cheat_search()
     display_result(result, win_opts)
 end
 
+local function list_result_picker(results)
+    pickers.new {
+        prompt_title = 'Cheat List',
+        finder = finders.new_table {
+            results=results,
+            entry_maker = function(line)
+                return {
+                    display = line,
+                }
+            end
+        },
+        attach_mappings = function (prompt_bufnr, map)
+            actions.select_default:replace(function()
+                local selection = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+
+                local search_options = {
+                    include_comments = vim.g["chtsh_include_comments"],
+                    query_include_language = 1
+                }
+
+                local obj = cheat.get_url(selection.display, search_options)
+                local result = cheat.get_result(obj.url)
+                local window_opts = nil
+
+                if layout["window"] then
+                    local window_settings = layout["window"]
+                    win_opts = {
+                        title = string.format("Cheat Search (%s)", filetype),
+                        width = window_settings["width"][false],
+                        height = window_settings["height"][false],
+                        highlight_group = "TermCursorNr"
+                    }
+                end
+
+                display_result(result, win_opts)
+            end)
+            return true
+        end
+  }:find()
+end
+
 local function cheat_list()
     local search_options = {
         include_comments = 0,
@@ -130,15 +179,9 @@ local function cheat_list()
     local result = cheat.get_result(obj.url)
 
     if result ~= nil or table.getn(result) ~= 0 then
-        local win_opts = {
-            title = string.format("Cheat List (%s)", filetype),
-            width = 0.4,
-            height = 0.7,
-            highlight_group = "LineNr"
-        }
-
-        display_result(result, win_opts)
-        vim.cmd("set cursorline")
+        list_result_picker(result)
+    else
+        error("No result found")
     end
 end
 
