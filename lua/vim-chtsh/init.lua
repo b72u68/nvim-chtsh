@@ -79,7 +79,7 @@ local function display_result(result, win_opts)
             vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), 0, -1, true, result)
         end
     else
-        error("No result found")
+        print("No result found")
     end
 end
 
@@ -178,10 +178,10 @@ local function cheat_list()
     local obj = cheat.get_url(":list", search_options)
     local result = cheat.get_result(obj.url)
 
-    if result ~= nil or table.getn(result) ~= 0 then
+    if result ~= nil and table.getn(result) ~= 0 then
         list_result_picker(result)
     else
-        error("No result found")
+        print("No result found")
     end
 end
 
