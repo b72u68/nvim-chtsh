@@ -11,12 +11,14 @@ A simple Neovim plugin to browse [cheat.sh](https://cheat.sh).
 Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```viml
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'b72u68/vim-chtsh'
 ```
 
 Using [dein](https://github.com/Shougo/dein.vim)
 
 ```viml
+call dein#add('nvim-telescope/telescope.nvim')
 call dein#add('b72u68/vim-chtsh')
 ```
 
