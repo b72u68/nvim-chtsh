@@ -148,7 +148,7 @@ local function list_result_picker(results)
                 if layout["window"] then
                     local window_settings = layout["window"]
                     win_opts = {
-                        title = string.format("Cheat Search (%s)", filetype),
+                        title = string.format("Cheat Sheet (%s)", filetype),
                         width = window_settings["width"],
                         height = window_settings["height"],
                         highlight_group = "TermCursorNr"
