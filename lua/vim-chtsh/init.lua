@@ -130,14 +130,7 @@ end
 local function list_result_picker(results)
     pickers.new {
         prompt_title = 'Cheat List',
-        finder = finders.new_table {
-            results=results,
-            entry_maker = function(line)
-                return {
-                    display = line,
-                }
-            end
-        },
+        finder = finders.new_table(results),
         attach_mappings = function (prompt_bufnr, map)
             actions.select_default:replace(function()
                 local selection = action_state.get_selected_entry()
