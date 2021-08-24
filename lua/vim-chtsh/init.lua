@@ -96,8 +96,8 @@ local function cheat_sheet()
         local window_settings = layout["window"]
         win_opts = {
             title = "Cheat Sheet",
-            width = window_settings["width"][false],
-            height = window_settings["height"][false],
+            width = window_settings["width"],
+            height = window_settings["height"],
             highlight_group = "TermCursorNr"
         }
     end
@@ -118,8 +118,8 @@ local function cheat_search()
         local window_settings = layout["window"]
         win_opts = {
             title = string.format("Cheat Search (%s)", filetype),
-            width = window_settings["width"][false],
-            height = window_settings["height"][false],
+            width = window_settings["width"],
+            height = window_settings["height"],
             highlight_group = "TermCursorNr"
         }
     end
@@ -156,8 +156,8 @@ local function list_result_picker(results)
                     local window_settings = layout["window"]
                     win_opts = {
                         title = string.format("Cheat Search (%s)", filetype),
-                        width = window_settings["width"][false],
-                        height = window_settings["height"][false],
+                        width = window_settings["width"],
+                        height = window_settings["height"],
                         highlight_group = "TermCursorNr"
                     }
                 end
