@@ -2,7 +2,7 @@
 
 A simple Neovim plugin to browse [cheat.sh](https://cheat.sh).
 
-![Vim-chtsh Demo](![image](https://user-images.githubusercontent.com/64541805/131205909-00d8dbc4-7d64-4d04-a8da-0757478d72a7.png))
+![Vim-chtsh Demo](https://user-images.githubusercontent.com/64541805/131205909-00d8dbc4-7d64-4d04-a8da-0757478d72a7.png)
 
 ## Installation
 
