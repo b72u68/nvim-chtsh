@@ -1,10 +1,9 @@
-local float_win = require("vim-chtsh.window.float_win")
+local float_win = require("vim-chtsh.window")
 local cheat = require("vim-chtsh.cheat")
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
-local sorters = require('telescope.sorters')
 
 local filetype = vim.bo.filetype
 local layout = vim.g["chtsh_layout"]
