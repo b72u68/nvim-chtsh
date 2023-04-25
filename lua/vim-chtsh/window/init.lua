@@ -21,8 +21,8 @@ float_win.default_border_chars = {
 
 
 local function close_float_win(parent_win_id, win_id)
-    vim.api.nvim_win_close(parent_win_id, 1)
     vim.api.nvim_win_close(win_id, 1)
+    vim.api.nvim_win_close(parent_win_id, 1)
 end
 
 
