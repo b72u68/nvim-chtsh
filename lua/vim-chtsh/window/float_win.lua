@@ -156,21 +156,13 @@ function float_win.create_float_win(options)
     local win_id = vim.api.nvim_open_win(bufnr, true, win_opts)
     vim.cmd("setlocal winhighlight=Normal:TermCursorNC")
 
-    vim.keymap.set('n', 'q', function () vim.api.nvim_win_close(win_id, 1) end, { silent = true, buffer = bufnr })
-
-    vim.cmd(string.format(
-        "autocmd BufLeave,BufDelete <buffer=%s> ++nested ++once lua require('vim-chtsh.window').close_related_win(%s, %s)",
-        bufnr,
-        win_id,
-        border.win_id
-    ))
-
-    vim.cmd(string.format(
-        "autocmd WinClosed,WinLeave <buffer=%s> ++nested ++once lua require('vim-chtsh.window').close_related_win(%s, %s)",
-        bufnr,
-        win_id,
-        border.win_id
-    ))
+    vim.keymap.set("n", "q", function () vim.api.nvim_win_close(win_id, 1) end, { silent = true, buffer = bufnr })
+    vim.api.nvim_create_autocmd({"BufLeave", "BufDelete", "WinClosed", "WinLeave"}, {
+        buffer = bufnr,
+        callback = function()
+            vim.api.nvim_win_close(win_id, 1)
+        end
+    })
 
     return {
         bufnr = bufnr,
