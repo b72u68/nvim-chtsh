@@ -6,7 +6,6 @@ float_win.default_options = {
     title = "",
     height_percentage = 0.7,
     width_percentage = 0.7,
-    highlight_group = "TermCursorNC"
 }
 
 float_win.default_border_chars = {
@@ -19,7 +18,6 @@ float_win.default_border_chars = {
 }
 
 function float_win.get_options(options)
-    local highlight_group = options.highlight_group or float_win.highlight_group
     local height_percentage = options.height_percentage or float_win.height_percentage
     local width_percentage = options.width_percentage or float_win.width_percentage
 
@@ -34,7 +32,6 @@ function float_win.get_options(options)
         width = width,
         col = col,
         row = row,
-        highlight_group = highlight_group
     }
 end
 
@@ -150,11 +147,9 @@ function float_win.create_float_win(options)
     }
 
     local border = float_win.create_border_win(options)
-    vim.api.nvim_buf_set_option(border.bufnr, "winhighlight", "Normal:" .. options.highlight_group)
 
     local bufnr = vim.api.nvim_create_buf(false, true)
     local win_id = vim.api.nvim_open_win(bufnr, true, win_opts)
-    vim.api.nvim_buf_set_option(bufnr, "winhighlight", "Normal:TermCursorNC")
 
     vim.keymap.set("n", "q", function () vim.api.nvim_win_close(win_id, 1) end, { silent = true, buffer = bufnr })
     vim.api.nvim_create_autocmd({"BufLeave", "BufDelete", "WinClosed", "WinLeave"}, {

@@ -33,7 +33,6 @@ local function create_floating_window(window_props)
         title = window_props.title,
         height_percentage = window_props.height,
         width_percentage = window_props.width,
-        highlight_group = window_props.highlight_group
     }
 
     float_win.create_float_win(options)
@@ -66,7 +65,6 @@ local function display_result(result, win_opts)
                 title = win_opts.title,
                 width = win_opts.width,
                 height = win_opts.height,
-                highlight_group = win_opts.highlight_group
             }
         else
             create_split_window()
@@ -97,7 +95,6 @@ local function cheat_sheet()
             title = "Cheat Sheet",
             width = window_settings["width"],
             height = window_settings["height"],
-            highlight_group = "TermCursorNr"
         }
     end
 
@@ -119,7 +116,6 @@ local function cheat_search()
             title = string.format("Cheat Search (%s)", filetype),
             width = window_settings["width"],
             height = window_settings["height"],
-            highlight_group = "TermCursorNr"
         }
     end
 
@@ -150,7 +146,6 @@ local function list_result_picker(results)
                         title = string.format("Cheat Sheet (%s)", filetype),
                         width = window_settings["width"],
                         height = window_settings["height"],
-                        highlight_group = "TermCursorNr"
                     }
                 end
 
