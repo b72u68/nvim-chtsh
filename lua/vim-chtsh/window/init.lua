@@ -21,8 +21,8 @@ float_win.default_border_chars = {
 
 
 local function close_float_win(parent_win_id, win_id)
-    vim.api.nvim_win_close(win_id, 1)
     vim.api.nvim_win_close(parent_win_id, 1)
+    vim.api.nvim_win_close(win_id, 1)
 end
 
 
@@ -165,7 +165,7 @@ function float_win.create_float_win(options)
 
     vim.keymap.set("n",
                    "q",
-                   function() close_float_win(border.win_id, win_id) end,
+                   vim.cmd("doautocmd WinClosed"),
                    { silent = true, buffer = bufnr })
 
     vim.api.nvim_create_autocmd({"BufLeave", "BufDelete", "WinClosed", "WinLeave"}, {
