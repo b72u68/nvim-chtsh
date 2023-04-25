@@ -2,11 +2,13 @@ local stats = vim.api.nvim_list_uis()[1]
 
 local float_win = {}
 
+
 float_win.default_options = {
     title = "",
     height_percentage = 0.7,
     width_percentage = 0.7,
 }
+
 
 float_win.default_border_chars = {
     topleft = "╭",
@@ -16,6 +18,13 @@ float_win.default_border_chars = {
     botleft = "╰",
     botright =  "╯"
 }
+
+
+local function close_float_win(parent_win_id, win_id)
+    vim.api.nvim_win_close(parent_win_id, 1)
+    vim.api.nvim_win_close(win_id, 1)
+end
+
 
 function float_win.get_options(options)
     local height_percentage = options.height_percentage or float_win.height_percentage
@@ -34,6 +43,7 @@ function float_win.get_options(options)
         row = row,
     }
 end
+
 
 function float_win.get_border_line(content_win_options)
     local lines = {}
@@ -97,6 +107,7 @@ function float_win.get_border_line(content_win_options)
     return lines
 end
 
+
 function float_win.create_border_win(content_win_options)
     local lines = float_win.get_border_line(content_win_options)
 
@@ -123,6 +134,7 @@ function float_win.create_border_win(content_win_options)
 
     return obj
 end
+
 
 function float_win.create_float_win(options)
     options = float_win.get_options(options)
@@ -151,12 +163,15 @@ function float_win.create_float_win(options)
     local bufnr = vim.api.nvim_create_buf(false, true)
     local win_id = vim.api.nvim_open_win(bufnr, true, win_opts)
 
-    vim.keymap.set("n", "q", function () vim.api.nvim_win_close(win_id, 1) end, { silent = true, buffer = bufnr })
+    vim.keymap.set("n",
+                   "q",
+                   function() close_float_win(border.win_id, win_id) end,
+                   { silent = true, buffer = bufnr })
+
     vim.api.nvim_create_autocmd({"BufLeave", "BufDelete", "WinClosed", "WinLeave"}, {
         buffer = bufnr,
         callback = function()
-            vim.api.nvim_win_close(border.win_id, 1)
-            vim.api.nvim_win_close(win_id, 1)
+            close_float_win(border.win_id, win_id)
         end
     })
 
