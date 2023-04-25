@@ -57,7 +57,6 @@ function cheat.get_result(url)
 
     for i=1,string.len(result) do
         local c = result:sub(i, i)
-
         if c == "\n" then
             if line:gsub("%s+", "") ~= "" then
                 table.insert(lines, line)
@@ -68,7 +67,7 @@ function cheat.get_result(url)
         end
     end
 
-    return { table.unpack(lines, 2) }
+    return { unpack(lines, 2) }
 end
 
 return cheat
