@@ -1,38 +1,42 @@
 local cheat = {}
 
 local base_url = "https://cht.sh"
-local filetype = vim.bo.filetype
 
 cheat.default_options = {
     include_comments = 1,
-    query_include_language = 0,
+    filetype = vim.bo.filetype
 }
+
+
+function cheat.process_query(query, included_language)
+    local filetype
+    local words = {}
+
+    for w in string.gmatch(query, "%w+") do
+        table.insert(words, w)
+    end
+
+    if #words > 1 and included_language then
+        filetype = words[1]
+        query = table.concat(words, "+", 2)
+    else
+        filetype = cheat.default_options.filetype
+        query = table.concat(words, "+")
+    end
+
+    return { query = query, filetype = filetype }
+end
+
 
 function cheat.get_url(query, options)
     local url, tag
-
+    local filetype = options.language or cheat.default_options.filetype
     local include_comments = options.include_comments or cheat.default_options.include_comments
-    local query_include_language = options.include_comments or cheat.default_options.query_include_language
 
     if include_comments == 0 then
         tag = "\\?QT"
     else
         tag = "\\?T"
-    end
-
-    if query_include_language == 1 then
-        local first_whitespace = string.find(query, "%s")
-
-        if first_whitespace ~= nil then
-            filetype = string.sub(query, 1, first_whitespace - 1)
-            query = (string.sub(query, first_whitespace + 1)):gsub("%s", "+")
-        end
-    else
-        query = query:gsub("%s", "+")
-
-        if filetype == "tex" then
-            filetype = "latex"
-        end
     end
 
     url = string.format("%s/%s/%s%s",
@@ -42,11 +46,9 @@ function cheat.get_url(query, options)
         tag
     )
 
-    return {
-        url = url,
-        filetype = filetype
-    }
+    return url
 end
+
 
 function cheat.get_result(url)
     local command = "!curl --silent " .. url
