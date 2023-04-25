@@ -68,7 +68,7 @@ function cheat.get_result(url)
         end
     end
 
-    return { unpack(lines, 2) }
+    return { table.unpack(lines, 2) }
 end
 
 return cheat

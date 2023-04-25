@@ -112,7 +112,7 @@ local function cheat_search()
     }
 
     local result = get_result(search_options)
-    local window_opts = nil
+    local win_opts
 
     if layout["window"] then
         local window_settings = layout["window"]
@@ -143,7 +143,7 @@ local function list_result_picker(results)
 
                 local obj = cheat.get_url(selection.display, search_options)
                 local result = cheat.get_result(obj.url)
-                local window_opts = nil
+                local win_opts
 
                 if layout["window"] then
                     local window_settings = layout["window"]
@@ -171,7 +171,7 @@ local function cheat_list()
     local obj = cheat.get_url(":list", search_options)
     local result = cheat.get_result(obj.url)
 
-    if result ~= nil and table.getn(result) ~= 0 then
+    if result ~= nil and #result ~= 0 then
         list_result_picker(result)
     else
         print("No result found")
