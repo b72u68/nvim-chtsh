@@ -93,7 +93,7 @@ local function cheat_sheet()
 
         local result = get_result(obj.query, search_options)
 
-        local win_opts = nil
+        local win_opts
         if layout["window"] then
             local window_settings = layout["window"]
             win_opts = {
@@ -121,7 +121,6 @@ local function cheat_search()
         local result = get_result(query, search_options)
 
         local win_opts
-
         if layout["window"] then
             local window_settings = layout["window"]
             win_opts = {

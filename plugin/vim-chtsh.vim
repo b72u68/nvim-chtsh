@@ -11,15 +11,9 @@ fun! CheatSearch()
     lua require("vim-chtsh").cheat_search()
 endfun
 
-fun! CheatList()
-    lua for k in pairs(package.loaded) do if k:match("^vim%-chtsh") then package.loaded[k] = nil end end
-    lua require("vim-chtsh").cheat_list()
-endfun
-
 augroup CheatSheet
     autocmd!
 augroup END
 
 command! CheatSheet call CheatSheet()
 command! CheatSearch call CheatSearch()
-command! CheatList call CheatList()
