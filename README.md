@@ -70,6 +70,8 @@ Functions\2
 
 More features coming soon (if I come up with something)
 
+- [ ] Reimplement Cheat List functionality
+- [ ] Use HTTP library in Lua instead of calling curl in command line
 - [x] ~~Add border lines around the result buffer.~~
 - [x] ~~Show result in split window.~~
 - [x] ~~Search with language and query.~~
