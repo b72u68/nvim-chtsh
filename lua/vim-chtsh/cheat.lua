@@ -16,12 +16,14 @@ function cheat.process_query(query, included_language)
         table.insert(words, w)
     end
 
-    if #words > 1 and included_language then
+    if #words == 0 then
+        return { query = nil }
+    elseif #words > 1 and included_language then
         filetype = words[1]
-        query = table.concat(words, "+", 2)
+        query = table.concat(words, " ", 2)
     else
         filetype = cheat.default_options.filetype
-        query = table.concat(words, "+")
+        query = table.concat(words, " ")
     end
 
     return { query = query, filetype = filetype }
@@ -32,6 +34,8 @@ function cheat.get_url(query, options)
     local url, tag
     local filetype = options.language or cheat.default_options.filetype
     local include_comments = options.include_comments or cheat.default_options.include_comments
+
+    query = string.gsub(query, "%s+", "+")
 
     if include_comments == 0 then
         tag = "\\?QT"
