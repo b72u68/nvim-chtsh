@@ -168,7 +168,12 @@ function float_win.create_float_win(options)
                    function () close_float_win(border.win_id, win_id) end,
                    { silent = true, buffer = bufnr })
 
-    vim.api.nvim_create_autocmd({"BufLeave", "BufDelete", "WinClosed", "WinLeave"}, {
+    vim.keymap.set("n",
+                   "<Esc>",
+                   function () close_float_win(border.win_id, win_id) end,
+                   { silent = true, buffer = bufnr })
+
+    vim.api.nvim_create_autocmd({"BufLeave", "WinLeave"}, {
         buffer = bufnr,
         callback = function()
             close_float_win(border.win_id, win_id)
