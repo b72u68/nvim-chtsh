@@ -26,7 +26,7 @@ local function create_floating_window(window_props, opts)
     }
 
     local window = float_win.create_float_win(win_opts)
-    vim.api.nvim_set_option_value("wrap", true, { buf = window.bufnr })
+    vim.api.nvim_set_option_value("wrap", true, { win=window.win_id })
     vim.api.nvim_set_option_value("filetype", opts.filetype, { buf = window.bufnr })
 end
 
