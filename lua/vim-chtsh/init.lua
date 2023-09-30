@@ -1,5 +1,5 @@
 local float_win = require("vim-chtsh.window")
-local cheat = require("vim-chtsh.cheat")
+local chtsh = require("vim-chtsh.chtsh")
 
 local layout = vim.g["chtsh_layout"]
 
@@ -11,8 +11,8 @@ end
 
 local function get_result(query, options)
     if query ~= nil and query ~= "" then
-        local url = cheat.get_url(query, options)
-        return cheat.get_result(url)
+        local url = chtsh.get_url(query, options)
+        return chtsh.get_result(url)
     end
     return nil
 end
@@ -72,7 +72,7 @@ end
 
 local function run_cheat(opts)
     local raw_query = get_query(opts.mode)
-    local query_obj = cheat.process_query(raw_query, opts.query_included_language)
+    local query_obj = chtsh.process_query(raw_query, opts.query_included_language)
     local query = query_obj.query
 
     if query ~= nil then
