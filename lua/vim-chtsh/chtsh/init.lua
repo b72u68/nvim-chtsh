@@ -56,7 +56,7 @@ end
 
 function cheat.get_result(url)
     local command = "!curl --silent " .. url
-    local result = vim.api.nvim_exec(command, true)
+    local result = vim.api.nvim_exec2(command, { output=true }).output
 
     local lines = {}
     local line = ""
