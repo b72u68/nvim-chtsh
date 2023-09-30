@@ -1,8 +1,8 @@
-# vim-chtsh
+# nvim-chtsh
 
 A simple Neovim plugin to browse [cheat.sh](https://cheat.sh).
 
-![Vim-chtsh Demo](https://user-images.githubusercontent.com/64541805/131205909-00d8dbc4-7d64-4d04-a8da-0757478d72a7.png)
+![nvim-chtsh Demo](https://user-images.githubusercontent.com/64541805/131205909-00d8dbc4-7d64-4d04-a8da-0757478d72a7.png)
 
 ## Installation
 
@@ -12,14 +12,14 @@ Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```viml
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'b72u68/vim-chtsh'
+Plug 'b72u68/nvim-chtsh'
 ```
 
 Using [dein](https://github.com/Shougo/dein.vim)
 
 ```viml
 call dein#add('nvim-telescope/telescope.nvim')
-call dein#add('b72u68/vim-chtsh')
+call dein#add('b72u68/nvim-chtsh')
 ```
 
 ## Usage
@@ -71,9 +71,9 @@ Functions\2
 More features coming soon (if I come up with something)
 
 - [ ] Reimplement Cheat List functionality
-- [ ] Use HTTP library in Lua instead of calling curl in command line
 - [x] ~~Add border lines around the result buffer.~~
 - [x] ~~Show result in split window.~~
 - [x] ~~Search with language and query.~~
 - [x] ~~Create commands for easier key mapping.~~
 - [x] ~~Get list of available keywords.~~
+- [ ] ~~Use HTTP library in Lua instead of calling curl in command line~~
